@@ -1,0 +1,185 @@
+<!-- qa-automation-java/pom.xml -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>qa-automation-java</artifactId>
+    <version>1.0.0</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>common</module>
+        <module>ui-tests</module>
+        <module>api-tests</module>
+        <module>db-tests</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.release>17</maven.compiler.release>
+
+        <junit.version>5.10.2</junit.version>
+        <testng.version>7.10.2</testng.version>
+
+        <selenide.version>7.3.3</selenide.version>
+        <restassured.version>5.5.1</restassured.version>
+
+        <allure.version>2.27.0</allure.version>
+        <allure.junit5.version>2.27.0</allure.junit5.version>
+        <allure.testng.version>2.27.0</allure.testng.version>
+
+        <slf4j.version>2.0.13</slf4j.version>
+        <logback.version>1.5.6</logback.version>
+
+        <hikari.version>5.1.0</hikari.version>
+        <postgres.version>42.7.3</postgres.version>
+        <mysql.version>8.4.0</mysql.version>
+
+        <mongo.version>5.1.2</mongo.version>
+        <jedis.version>5.1.5</jedis.version>
+
+        <mockito.version>5.12.0</mockito.version>
+        <jackson.version>2.17.2</jackson.version>
+        <owner.version>1.0.12</owner.version>
+
+        <openapi.generator.version>7.7.0</openapi.generator.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Testing -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Allure -->
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-junit5</artifactId>
+                <version>${allure.junit5.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-testng</artifactId>
+                <version>${allure.testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- UI -->
+            <dependency>
+                <groupId>com.codeborne</groupId>
+                <artifactId>selenide</artifactId>
+                <version>${selenide.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- API -->
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>${restassured.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- JSON -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+
+            <!-- Config -->
+            <dependency>
+                <groupId>org.aeonbits.owner</groupId>
+                <artifactId>owner</artifactId>
+                <version>${owner.version}</version>
+            </dependency>
+
+            <!-- Logs -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+
+            <!-- DB -->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>${postgres.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- Mongo -->
+            <dependency>
+                <groupId>org.mongodb</groupId>
+                <artifactId>mongodb-driver-sync</artifactId>
+                <version>${mongo.version}</version>
+            </dependency>
+
+            <!-- Redis -->
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Surefire for unit/integration tests -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.5</version>
+                    <configuration>
+                        <useModulePath>false</useModulePath>
+                        <includes>
+                            <include>**/*Test.java</include>
+                        </includes>
+                    </configuration>
+                </plugin>
+
+                <!-- Allure report -->
+                <plugin>
+                    <groupId>io.qameta.allure</groupId>
+                    <artifactId>allure-maven</artifactId>
+                    <version>2.12.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>
