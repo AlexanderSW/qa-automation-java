@@ -101,4 +101,66 @@ public class JdbcSmokeTest {
             assertEquals(1, rs.getInt(1));
         }
     }
+
+    @Test
+    @Story("MySQL: print users with login starting qa_user")
+    void printQaUsers() throws Exception {
+        try (Connection c = JdbcPool.mysql().getConnection()) {
+            var select = c.prepareStatement("""
+                select id, login
+                from users
+                where login like 'qa_user%'
+                order by id
+                """);
+            var rs = select.executeQuery();
+            while (rs.next()) {
+                var id = rs.getInt("id");
+                var login = rs.getString("login");
+                System.out.println("qa_user: id=" + id + ", login=" + login);
+            }
+        }
+    }
+
+    @Test
+    @Story("MySQL: join users and user_tokens by user_id")
+    void joinUsersWithTokens() throws Exception {
+        try (Connection c = JdbcPool.mysql().getConnection()) {
+            var select = c.prepareStatement("""
+                select u.id as user_id, u.login, ut.id as token_id
+                from users u
+                join user_tokens ut on ut.user_id = u.id
+                limit 1
+                """);
+            var rs = select.executeQuery();
+            assertTrue(rs.next());
+            var userId = rs.getInt("user_id");
+            var login = rs.getString("login");
+            var tokenId = rs.getInt("token_id");
+            System.out.println("join: user_id=" + userId + ", login=" + login + ", token_id=" + tokenId);
+            assertTrue(userId > 0);
+            assertNotNull(login);
+            assertTrue(tokenId > 0);
+        }
+    }
+
+    @Test
+    @Story("MySQL: left join users and user_tokens by user_id")
+    void leftJoinUsersWithTokens() throws Exception {
+        try (Connection c = JdbcPool.mysql().getConnection()) {
+            var select = c.prepareStatement("""
+                select u.id as user_id, u.login, ut.id as token_id
+                from users u
+                left join user_tokens ut on ut.user_id = u.id
+                limit 1
+                """);
+            var rs = select.executeQuery();
+            assertTrue(rs.next());
+            var userId = rs.getInt("user_id");
+            var login = rs.getString("login");
+            var tokenId = rs.getObject("token_id");
+            System.out.println("left join: user_id=" + userId + ", login=" + login + ", token_id=" + tokenId);
+            assertTrue(userId > 0);
+            assertNotNull(login);
+        }
+    }
 }
