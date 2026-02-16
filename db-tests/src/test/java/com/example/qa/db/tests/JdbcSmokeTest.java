@@ -7,6 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -162,5 +166,102 @@ public class JdbcSmokeTest {
             assertTrue(userId > 0);
             assertNotNull(login);
         }
+    }
+
+    @Test
+    @Story("MySQL: Stream API filter + map for users")
+    void streamFilterAndMapUsers() throws Exception {
+        try (Connection c = JdbcPool.mysql().getConnection()) {
+            var prefix = "stream_user_" + System.currentTimeMillis() + "_";
+            insertStreamUsers(c, prefix, 3);
+
+            var logins = selectLoginsByPrefix(c, prefix);
+            var upper = logins.stream()
+                    .filter(l -> l.startsWith("stream_user_"))
+                    .map(String::toUpperCase)
+                    .toList();
+            System.out.println("stream filter+map: " + upper);
+
+            assertEquals(3, upper.size());
+            assertTrue(upper.stream().allMatch(l -> l.startsWith("STREAM_USER_")));
+        }
+    }
+
+    @Test
+    @Story("MySQL: Stream API distinct + sorted for user ids")
+    void streamDistinctAndSortedUserIds() throws Exception {
+        try (Connection c = JdbcPool.mysql().getConnection()) {
+            var prefix = "stream_user_" + System.currentTimeMillis() + "_";
+            insertStreamUsers(c, prefix, 4);
+
+            var ids = selectUserIdsByPrefix(c, prefix);
+            var distinctSorted = ids.stream().distinct().sorted().toList();
+            var sorted = ids.stream().sorted().toList();
+            System.out.println("stream distinct+sorted: " + distinctSorted);
+
+            assertEquals(ids.size(), distinctSorted.size());
+            assertEquals(sorted, distinctSorted);
+        }
+    }
+
+    @Test
+    @Story("MySQL: Stream API partitioning for users")
+    void streamPartitionUsers() throws Exception {
+        try (Connection c = JdbcPool.mysql().getConnection()) {
+            var prefix = "stream_user_" + System.currentTimeMillis() + "_";
+            insertStreamUsers(c, prefix, 2);
+
+            var logins = selectLoginsByPrefix(c, prefix);
+            Map<Boolean, List<String>> partitioned = logins.stream()
+                    .collect(Collectors.partitioningBy(l -> l.contains("stream_user_")));
+            System.out.println("stream partition: " + partitioned);
+
+            assertEquals(logins.size(), partitioned.get(true).size());
+        }
+    }
+
+    private void insertStreamUsers(Connection c, String prefix, int count) throws Exception {
+        var insert = c.prepareStatement("""
+                insert into users(login, password_hash)
+                values (?, ?)
+                """);
+        var passwordHash = "$2y$10$qaAutomationDummyHash";
+        for (int i = 0; i < count; i++) {
+            insert.setString(1, prefix + i);
+            insert.setString(2, passwordHash);
+            insert.executeUpdate();
+        }
+    }
+
+    private List<String> selectLoginsByPrefix(Connection c, String prefix) throws Exception {
+        var select = c.prepareStatement("""
+                select login
+                from users
+                where login like ?
+                order by id
+                """);
+        select.setString(1, prefix + "%");
+        var rs = select.executeQuery();
+        var logins = new ArrayList<String>();
+        while (rs.next()) {
+            logins.add(rs.getString("login"));
+        }
+        return logins;
+    }
+
+    private List<Integer> selectUserIdsByPrefix(Connection c, String prefix) throws Exception {
+        var select = c.prepareStatement("""
+                select id
+                from users
+                where login like ?
+                order by id
+                """);
+        select.setString(1, prefix + "%");
+        var rs = select.executeQuery();
+        var ids = new ArrayList<Integer>();
+        while (rs.next()) {
+            ids.add(rs.getInt("id"));
+        }
+        return ids;
     }
 }
