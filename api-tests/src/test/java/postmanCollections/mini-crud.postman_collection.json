@@ -1,0 +1,634 @@
+{
+  "info":  {
+    "name":  "mini-crud API",
+    "_postman_id":  "f9c8f3fb-6f49-4ef8-8b65-a9e857a0fd20",
+    "description":  "Auto-generated from api.php routes in mini-crud project.",
+    "schema":  "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth":  {
+    "type":  "bearer",
+    "bearer":  [
+      {
+        "key":  "token",
+        "value":  "{{token}}",
+        "type":  "string"
+      }
+    ]
+  },
+  "variable":  [
+    {
+      "key":  "baseUrl",
+      "value":  "http://localhost/mini-crud/api.php"
+    },
+    {
+      "key":  "token",
+      "value":  ""
+    },
+    {
+      "key":  "itemId",
+      "value":  "1"
+    },
+    {
+      "key":  "carId",
+      "value":  "1"
+    },
+    {
+      "key":  "imagePath",
+      "value":  "C:/path/to/image.jpg"
+    },
+    {
+      "key":  "tempToken",
+      "value":  ""
+    }
+  ],
+  "item":  [
+    {
+      "name":  "Public",
+      "item":  [
+        {
+          "name":  "Health",
+          "request":  {
+            "auth":  {
+              "type":  "noauth"
+            },
+            "method":  "GET",
+            "header":  [
+
+            ],
+            "url":  {
+              "raw":  "{{baseUrl}}/health",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Register",
+          "request":  {
+            "auth":  {
+              "type":  "noauth"
+            },
+            "method":  "POST",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"login\": \"demo_user\",\n  \"password\": \"secret123\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/register",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "register"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Login",
+          "request":  {
+            "auth":  {
+              "type":  "noauth"
+            },
+            "method":  "POST",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"login\": \"demo_user\",\n  \"password\": \"secret123\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/login",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "login"
+              ]
+            }
+          },
+          "event":  [
+            {
+              "listen":  "test",
+              "script":  {
+                "type":  "text/javascript",
+                "exec":  [
+                  "const json = pm.response.json();",
+                  "if (json \u0026\u0026 json.token) {",
+                  "  pm.collectionVariables.set(\u0027token\u0027, json.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name":  "Items",
+      "item":  [
+        {
+          "name":  "List Items",
+          "request":  {
+            "method":  "GET",
+            "url":  {
+              "raw":  "{{baseUrl}}/items?limit=50\u0026offset=0",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items"
+              ],
+              "query":  [
+                {
+                  "key":  "limit",
+                  "value":  "50"
+                },
+                {
+                  "key":  "offset",
+                  "value":  "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Search Items",
+          "request":  {
+            "method":  "GET",
+            "url":  {
+              "raw":  "{{baseUrl}}/items/search?q=test",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items",
+                "search"
+              ],
+              "query":  [
+                {
+                  "key":  "q",
+                  "value":  "test"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Get Item By Id",
+          "request":  {
+            "method":  "GET",
+            "url":  {
+              "raw":  "{{baseUrl}}/items/{{itemId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items",
+                "{{itemId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Create Item",
+          "request":  {
+            "method":  "POST",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"title\": \"New Item\",\n  \"description\": \"Item description\",\n  \"status\": \"active\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/items",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Replace Item (PUT)",
+          "request":  {
+            "method":  "PUT",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"title\": \"Updated Title\",\n  \"description\": \"Updated description\",\n  \"status\": \"archived\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/items/{{itemId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items",
+                "{{itemId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Patch Item",
+          "request":  {
+            "method":  "PATCH",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"title\": \"Patched title\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/items/{{itemId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items",
+                "{{itemId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Patch Item Status",
+          "request":  {
+            "method":  "PATCH",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"status\": \"active\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/items/{{itemId}}/status",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items",
+                "{{itemId}}",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Delete Item",
+          "request":  {
+            "method":  "DELETE",
+            "url":  {
+              "raw":  "{{baseUrl}}/items/{{itemId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items",
+                "{{itemId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Bulk Delete Items",
+          "request":  {
+            "method":  "DELETE",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"ids\": [1, 2, 3]\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/items",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "items"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name":  "Cars",
+      "item":  [
+        {
+          "name":  "List Cars",
+          "request":  {
+            "method":  "GET",
+            "url":  {
+              "raw":  "{{baseUrl}}/cars?sort=id\u0026order=DESC\u0026limit=50\u0026offset=0",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars"
+              ],
+              "query":  [
+                {
+                  "key":  "sort",
+                  "value":  "id"
+                },
+                {
+                  "key":  "order",
+                  "value":  "DESC"
+                },
+                {
+                  "key":  "limit",
+                  "value":  "50"
+                },
+                {
+                  "key":  "offset",
+                  "value":  "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Get Car By Id",
+          "request":  {
+            "method":  "GET",
+            "url":  {
+              "raw":  "{{baseUrl}}/cars/{{carId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars",
+                "{{carId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Create Car",
+          "request":  {
+            "method":  "POST",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"name\": \"BMW\",\n  \"model\": \"X5\",\n  \"seo_url\": \"bmw-x5\",\n  \"status\": 1,\n  \"top5\": 0,\n  \"sort_order\": 0,\n  \"data\": {\n    \"engine\": \"3.0\"\n  },\n  \"image_temp_token\": \"{{tempToken}}\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/cars",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Update Car (PUT)",
+          "request":  {
+            "method":  "PUT",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"name\": \"BMW\",\n  \"model\": \"X6\",\n  \"seo_url\": \"bmw-x6\",\n  \"status\": 1,\n  \"top5\": 1,\n  \"sort_order\": 10,\n  \"data\": {\n    \"engine\": \"3.0\"\n  }\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/cars/{{carId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars",
+                "{{carId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Update Car (PATCH)",
+          "request":  {
+            "method":  "PATCH",
+            "header":  [
+              {
+                "key":  "Content-Type",
+                "value":  "application/json"
+              }
+            ],
+            "body":  {
+              "mode":  "raw",
+              "raw":  "{\n  \"name\": \"Audi\",\n  \"model\": \"Q7\"\n}",
+              "options":  {
+                "raw":  {
+                  "language":  "json"
+                }
+              }
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/cars/{{carId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars",
+                "{{carId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Upload Temp Car Image",
+          "request":  {
+            "method":  "POST",
+            "body":  {
+              "mode":  "formdata",
+              "formdata":  [
+                {
+                  "key":  "image",
+                  "type":  "file",
+                  "src":  "{{imagePath}}"
+                }
+              ]
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/cars/images/temp",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars",
+                "images",
+                "temp"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Upload Car Main Image",
+          "request":  {
+            "method":  "POST",
+            "body":  {
+              "mode":  "formdata",
+              "formdata":  [
+                {
+                  "key":  "image",
+                  "type":  "file",
+                  "src":  "{{imagePath}}"
+                }
+              ]
+            },
+            "url":  {
+              "raw":  "{{baseUrl}}/cars/{{carId}}/image",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars",
+                "{{carId}}",
+                "image"
+              ]
+            }
+          }
+        },
+        {
+          "name":  "Delete Car",
+          "request":  {
+            "method":  "DELETE",
+            "url":  {
+              "raw":  "{{baseUrl}}/cars/{{carId}}",
+              "host":  [
+                "{{baseUrl}}"
+              ],
+              "path":  [
+                "cars",
+                "{{carId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "event":  [
+    {
+      "listen":  "test",
+      "script":  {
+        "type":  "text/javascript",
+        "exec":  [
+          "pm.test(\u0027Status code is successful (2xx/3xx)\u0027, function () {",
+          "  pm.expect(pm.response.code).to.be.within(200, 399);",
+          "});",
+          "",
+          "pm.test(\u0027Response time is under 2000ms\u0027, function () {",
+          "  pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});",
+          "",
+          "pm.test(\u0027Response has a body\u0027, function () {",
+          "  pm.expect(pm.response.text()).to.not.equal(\u0027\u0027);",
+          "});",
+          "",
+          "pm.test(\u0027Response is JSON when Content-Type is application/json\u0027, function () {",
+          "  var ct = (pm.response.headers.get(\u0027Content-Type\u0027) || \u0027\u0027).toLowerCase();",
+          "  if (ct.includes(\u0027application/json\u0027)) {",
+          "    pm.response.to.have.jsonBody();",
+          "  }",
+          "});"
+        ]
+      }
+    }
+  ]
+}

@@ -11,5 +11,9 @@ docker compose up -d
 ## Run tests
 mvn test
 
+mvn -pl ui-tests -am test allure:serve
+
+mvn -pl api-tests,ui-tests,db-tests -am test
+
 ## Allure
 mvn allure:serve

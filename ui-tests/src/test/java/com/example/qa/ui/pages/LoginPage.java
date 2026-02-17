@@ -25,4 +25,10 @@ public class LoginPage {
     public void expectLoginError() {
         errorBox.shouldBe(visible);
     }
+
+    @Step("Expect redirected from login page")
+    public void expectRedirectedFromLogin() {
+        com.codeborne.selenide.Selenide.webdriver()
+                .shouldNotHave(com.codeborne.selenide.WebDriverConditions.urlContaining("login.php"));
+    }
 }
